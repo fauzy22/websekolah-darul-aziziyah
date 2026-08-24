@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import Navbar from "../components/Navbar"
 import Footer from "../components/Footer"
 import { getBerita, insertKontak } from "../lib/supabase"
+import { useReveal } from "../lib/useReveal"
 
 const program = [
   { title: "Tahfidz Al-Qur'an", desc: "Program unggulan menghafal Al-Qur'an dengan metode talaqqi dan tartil sejak kelas 1." },
@@ -14,6 +15,13 @@ export default function Home() {
   const [berita, setBerita] = useState([])
   const [form, setForm] = useState({ nama: "", email: "", pesan: "" })
   const [sent, setSent] = useState(false)
+
+  // Reveal refs per section
+  const [profRef, profShown] = useReveal()
+  const [progRef, progShown] = useReveal()
+  const [newsRef, newsShown] = useReveal()
+  const [galRef, galShown] = useReveal()
+  const [conRef, conShown] = useReveal()
 
   useEffect(() => {
     getBerita().then(setBerita).catch(() => setBerita([]))
@@ -37,19 +45,19 @@ export default function Home() {
           <p className="text-brand-600 font-medium mb-4 tracking-wide uppercase text-sm">Madrasah Ibtidaiyah</p>
           <h1 className="text-5xl md:text-6xl font-semibold tracking-tight text-ink mb-6">MI Darul Aziziyah</h1>
           <p className="text-xl text-sub max-w-2xl mx-auto leading-relaxed">
-          Cerdas secara intelektual, kuat secara spiritual. Kami menyiapkan generasi Qur'ani
-          yang berakhlak mulia dan siap menghadapi masa depan.
-        </p>
-        <div className="mt-10 flex gap-4 justify-center">
-          <a href="#kontak" className="bg-brand-600 hover:bg-brand-700 text-white px-6 py-3 rounded-full font-medium transition-colors">Daftar Sekarang</a>
-          <a href="#profil" className="border border-black/10 hover:border-black/30 px-6 py-3 rounded-full font-medium transition-colors">Kenali Kami</a>
+            Cerdas secara intelektual, kuat secara spiritual. Kami menyiapkan generasi Qur'ani
+            yang berakhlak mulia dan siap menghadapi masa depan.
+          </p>
+          <div className="mt-10 flex gap-4 justify-center">
+            <a href="#kontak" className="bg-brand-600 hover:bg-brand-700 text-white px-6 py-3 rounded-full font-medium transition-colors">Daftar Sekarang</a>
+            <a href="#profil" className="border border-black/10 hover:border-black/30 px-6 py-3 rounded-full font-medium transition-colors">Kenali Kami</a>
+          </div>
         </div>
-      </div>
       </section>
 
-      <section id="profil" className="bg-brand-50 py-24">
+      <section id="profil" ref={profRef} className={`bg-brand-50 py-24 ${profShown ? "reveal is-visible" : "reveal"}`}>
         <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-16 items-center">
-          <div className="animate-fade-up">
+          <div>
             <h2 className="text-3xl md:text-4xl font-semibold tracking-tight mb-6">Profil Sekolah</h2>
             <p className="text-sub leading-relaxed mb-4">
               MI Darul Aziziyah adalah lembaga pendidikan dasar Islam yang menggabungkan
@@ -73,12 +81,12 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="program" className="py-24">
+      <section id="program" ref={progRef} className={`py-24 ${progShown ? "reveal is-visible" : "reveal"}`}>
         <div className="max-w-7xl mx-auto px-6">
           <h2 className="text-3xl md:text-4xl font-semibold tracking-tight mb-12 text-center">Program Unggulan</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {program.map((p) => (
-              <div key={p.title} className="p-6 rounded-2xl border border-black/5 hover:shadow-md transition-shadow">
+            {program.map((p, i) => (
+              <div key={p.title} className={`p-6 rounded-2xl border border-black/5 hover:shadow-md transition-shadow reveal delay-${(i % 4) + 1} ${progShown ? "is-visible" : ""}`}>
                 <h3 className="font-semibold mb-2">{p.title}</h3>
                 <p className="text-sm text-sub leading-relaxed">{p.desc}</p>
               </div>
@@ -87,12 +95,12 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="berita" className="bg-brand-50 py-24">
+      <section id="berita" ref={newsRef} className={`bg-brand-50 py-24 ${newsShown ? "reveal is-visible" : "reveal"}`}>
         <div className="max-w-7xl mx-auto px-6">
           <h2 className="text-3xl md:text-4xl font-semibold tracking-tight mb-12 text-center">Berita & Kegiatan</h2>
           <div className="grid md:grid-cols-3 gap-6">
-            {berita.length > 0 ? berita.map((b) => (
-              <article key={b.id} className="bg-white rounded-2xl border border-black/5 p-6 hover:shadow-md transition-shadow">
+            {berita.length > 0 ? berita.map((b, i) => (
+              <article key={b.id} className={`bg-white rounded-2xl border border-black/5 p-6 hover:shadow-md transition-shadow reveal delay-${(i % 4) + 1} ${newsShown ? "is-visible" : ""}`}>
                 <p className="text-xs text-brand-600 mb-2">{b.tanggal}</p>
                 <h3 className="font-semibold mb-2 leading-snug">{b.judul}</h3>
                 <p className="text-sm text-sub leading-relaxed">{b.isi}</p>
@@ -104,12 +112,12 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="galeri" className="py-24">
+      <section id="galeri" ref={galRef} className={`py-24 ${galShown ? "reveal is-visible" : "reveal"}`}>
         <div className="max-w-7xl mx-auto px-6">
           <h2 className="text-3xl md:text-4xl font-semibold tracking-tight mb-12 text-center">Galeri Kegiatan</h2>
           <div className="grid md:grid-cols-3 gap-6">
-            {[1, 2, 3].map((n) => (
-              <div key={n} className="rounded-2xl overflow-hidden border border-black/5 hover:shadow-md transition-shadow">
+            {[1, 2, 3].map((n, i) => (
+              <div key={n} className={`rounded-2xl overflow-hidden border border-black/5 hover:shadow-md transition-shadow reveal delay-${(i % 4) + 1} ${galShown ? "is-visible" : ""}`}>
                 <img src="/galeri-contoh.svg" alt={`Galeri ${n}`} className="w-full h-auto" />
               </div>
             ))}
@@ -118,7 +126,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="kontak" className="py-24">
+      <section id="kontak" ref={conRef} className={`py-24 ${conShown ? "reveal is-visible" : "reveal"}`}>
         <div className="max-w-3xl mx-auto px-6 text-center">
           <h2 className="text-3xl md:text-4xl font-semibold tracking-tight mb-6">Hubungi Kami</h2>
           <p className="text-sub mb-10">Tertarik mendaftarkan putra-putri Anda? Kirim pesan dan tim kami akan merespons.</p>

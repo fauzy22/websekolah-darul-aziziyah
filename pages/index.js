@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import Navbar from "../components/Navbar"
 import Footer from "../components/Footer"
-import { getBerita, insertKontak } from "../lib/supabase"
+import { getBerita } from "../lib/supabase"
 import { useReveal } from "../lib/useReveal"
 
 const program = [
@@ -15,6 +15,8 @@ export default function Home() {
   const [berita, setBerita] = useState([])
   const [form, setForm] = useState({ nama: "", email: "", pesan: "" })
   const [sent, setSent] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState("")
 
   // Reveal refs per section
   const [profRef, profShown] = useReveal()
@@ -29,8 +31,19 @@ export default function Home() {
 
   const submit = async (e) => {
     e.preventDefault()
-    const ok = await insertKontak(form.nama, form.email, form.pesan)
-    if (ok) { setSent(true); setForm({ nama: "", email: "", pesan: "" }) }
+    setLoading(true); setError("")
+    try {
+      const res = await fetch("/api/kontak", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      })
+      const data = await res.json()
+      if (data.ok) { setSent(true); setForm({ nama: "", email: "", pesan: "" }) }
+      else setError(data.msg || "Gagal mengirim. Coba lagi.")
+    } catch {
+      setError("Terjadi gangguan jaringan. Coba lagi nanti.")
+    } finally { setLoading(false) }
   }
 
   return (
@@ -133,12 +146,17 @@ export default function Home() {
           {sent ? (
             <p className="text-brand-600 font-medium">✅ Pesan terkirim! Kami akan segera menghubungi Anda.</p>
           ) : (
-            <form className="grid gap-4 text-left" onSubmit={submit}>
-              <input className="border border-black/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-brand-500" placeholder="Nama Orang Tua" value={form.nama} onChange={(e) => setForm({ ...form, nama: e.target.value })} required />
-              <input className="border border-black/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-brand-500" placeholder="Email" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required />
-              <textarea className="border border-black/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-brand-500" rows="4" placeholder="Pesan" value={form.pesan} onChange={(e) => setForm({ ...form, pesan: e.target.value })} required />
-              <button className="bg-brand-600 hover:bg-brand-700 text-white font-medium py-3 rounded-xl transition-colors">Kirim Pesan</button>
-            </form>
+            <>
+              {error && <p className="text-red-600 font-medium mb-4">{error}</p>}
+              <form className="grid gap-4 text-left" onSubmit={submit}>
+                <input className="border border-black/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-brand-500" placeholder="Nama Orang Tua" value={form.nama} onChange={(e) => setForm({ ...form, nama: e.target.value })} required />
+                <input className="border border-black/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-brand-500" placeholder="Email" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required />
+                <textarea className="border border-black/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-brand-500" rows="4" placeholder="Pesan" value={form.pesan} onChange={(e) => setForm({ ...form, pesan: e.target.value })} required />
+                <button type="submit" disabled={loading} className="bg-brand-600 hover:bg-brand-700 disabled:opacity-50 text-white font-medium py-3 rounded-xl transition-colors">
+                  {loading ? "Mengirim..." : "Kirim Pesan"}
+                </button>
+              </form>
+            </>
           )}
         </div>
       </section>

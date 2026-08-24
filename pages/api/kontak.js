@@ -1,15 +1,12 @@
 // API route: insert pesan kontak ke Google Sheets via Apps Script Web App proxy
-// Set Env Var di Vercel: SHEETS_PROXY_URL = <URL Web App Apps Script>
-const SHEET_ID = "1cP07Nc71ineWAOF0icUBfkSufibjPAADcOGLq_SgYKE"
+const SHEETS_PROXY_URL = "https://script.google.com/macros/s/AKfycby2jjGr7V8qFentLE3rKaxcqUy6NvDrSBPiuS4ufN1O9y_UyEzchgRMzKFhxdtWm0A/exec"
 
 export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).json({ ok: false })
   const { nama, email, pesan } = req.body || {}
   if (!nama || !email || !pesan) return res.status(400).json({ ok: false, msg: "Lengkapi semua field" })
-  const proxy = process.env.SHEETS_PROXY_URL
-  if (!proxy) return res.status(500).json({ ok: false, msg: "Proxy belum dikonfigurasi" })
   try {
-    const r = await fetch(proxy, {
+    const r = await fetch(SHEETS_PROXY_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ nama, email, pesan }),

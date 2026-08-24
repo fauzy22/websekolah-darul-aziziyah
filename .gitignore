@@ -1,8 +1,6 @@
-node_modules
-.next
-.env*.local
-npm-debug.log*
-.DS_Store
-.vercel
-.env*
+node_modules/
+.next/
 out/
+*.mjs.bak
+stitch_*
+.env*

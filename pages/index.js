@@ -10,20 +10,22 @@ import Kontak from "../components/Kontak"
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-white">
+    <>
       <Head>
-        <title>MI DARUL AZIZIYAH — Madrasah Ibtidaiyah Unggulan</title>
+        <title>DARUL AZIZIYAH — Madrasah Ibtidaiyah Unggulan</title>
         <meta name="description" content="MI Darul Aziziyah — Madrasah Ibtidaiyah berbasis Tahfidz dan Karakter. Cerdas secara intelektual, kuat secara spiritual." />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Navbar />
-      <Hero />
-      <Profil />
-      <Program />
-      <Berita />
-      <Galeri />
-      <Kontak />
+      <main>
+        <Hero />
+        <Profil />
+        <Program />
+        <Berita />
+        <Galeri />
+        <Kontak />
+      </main>
       <Footer />
-    </div>
+    </>
   )
 }

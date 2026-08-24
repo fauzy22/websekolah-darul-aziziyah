@@ -9,22 +9,32 @@ export default function Navbar() {
   ]
 
   return (
-    <header className="sticky top-0 z-50 backdrop-blur-xl bg-white/80 border-b border-black/5">
-      <nav className="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
-        <a href="#beranda" className="flex items-center gap-2">
-          <div className="w-9 h-9 rounded-lg bg-brand-600 text-white flex items-center justify-center text-sm font-bold">MI</div>
-          <span className="font-semibold tracking-tight text-ink hidden sm:inline">DARUL AZIZIYAH</span>
+    <header className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-xl border-b border-green-200/50 shadow-sm glass-nav">
+      <nav className="flex justify-between items-center h-20 px-6 md:px-12 max-w-7xl mx-auto">
+        {/* Brand */}
+        <a href="#beranda" className="font-bold text-2xl text-emerald-700 tracking-tight">
+          MI DARUL AZIZIYAH
         </a>
 
-        <ul className="hidden md:flex gap-8 text-sm text-sub">
+        {/* Navigation Links */}
+        <ul className="hidden md:flex items-center gap-8">
           {links.map((l) => (
             <li key={l.href}>
-              <a href={l.href} className="hover:text-ink transition-colors">{l.label}</a>
+              <a
+                href={l.href}
+                className="text-sm text-gray-600 hover:text-emerald-700 transition-colors font-medium hover:border-b-2 hover:border-emerald-700 pb-1"
+              >
+                {l.label}
+              </a>
             </li>
           ))}
         </ul>
 
-        <a href="#kontak" className="text-sm font-medium text-white bg-brand-600 hover:bg-brand-700 px-4 py-1.5 rounded-full transition-colors">
+        {/* CTA */}
+        <a
+          href="#kontak"
+          className="hidden md:inline-flex items-center justify-center bg-emerald-700 text-white font-medium text-sm px-6 py-2.5 rounded-lg hover:bg-emerald-800 transition-colors active:scale-95"
+        >
           PPDB
         </a>
       </nav>

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import Navbar from "../components/Navbar"
 import Footer from "../components/Footer"
-import { getBerita } from "../lib/supabase"
+import { getBerita } from "../lib/berita"
 import { useReveal } from "../lib/useReveal"
 
 const program = [
@@ -29,11 +29,12 @@ export default function Home() {
     getBerita().then(setBerita).catch(() => setBerita([]))
   }, [])
 
+  const SHEETS_PROXY = "https://script.google.com/macros/s/AKfycby2jjGr7V8qFentLE3rKaxcqUy6NvDrSBPiuS4ufN1O9y_UyEzchgRMzKFhxdtWm0A/exec"
   const submit = async (e) => {
     e.preventDefault()
     setLoading(true); setError("")
     try {
-      const res = await fetch("/api/kontak", {
+      const res = await fetch(SHEETS_PROXY, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),

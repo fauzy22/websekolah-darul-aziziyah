@@ -36,12 +36,12 @@ export default function Home() {
     try {
       const res = await fetch(SHEETS_PROXY, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "text/plain" },
         body: JSON.stringify(form),
       })
-      const data = await res.json()
-      if (data.ok) { setSent(true); setForm({ nama: "", email: "", pesan: "" }) }
-      else setError(data.msg || "Gagal mengirim. Coba lagi.")
+      // Apps Script tidak kirim CORS header -> jangan baca res.json() (bisa gagal di browser)
+      // Anggap sukses kalau tidak throw
+      setSent(true); setForm({ nama: "", email: "", pesan: "" })
     } catch {
       setError("Terjadi gangguan jaringan. Coba lagi nanti.")
     } finally { setLoading(false) }
